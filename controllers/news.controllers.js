@@ -5,8 +5,3 @@ exports.getTopics = (req, res, next) => {
     res.status(200).send({ topics: response });
   });
 };
-
-exports.handleUnknownEndpoints = (req, res, next) => {
-  console.log("im an unknown endpoint controller");
-  next(err);
-};
