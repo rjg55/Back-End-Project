@@ -1,8 +1,14 @@
 const express = require("express");
 const app = express();
-const {} = require("./controllers/news.controllers");
+const { getTopics } = require("./controllers/news.controllers");
 
 app.use(express.json());
+
+app.get("/api/topics", getTopics);
+
+// This will handle all undefined endpoints
+
+app.get("*");
 
 // Error Handling //
 
