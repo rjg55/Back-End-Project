@@ -3,6 +3,7 @@ const app = express();
 const {
   getTopics,
   getArticlesById,
+  patchVotesByID,
 } = require("./controllers/news.controllers");
 
 app.use(express.json());
@@ -10,6 +11,8 @@ app.use(express.json());
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticlesById);
+
+app.patch("/api/articles/:article_id", patchVotesByID);
 
 // This will handle all undefined endpoints
 

@@ -16,3 +16,12 @@ exports.selectArticleById = (articleID) => {
       return article.rows[0];
     });
 };
+
+exports.updateVotesById = (articleID, incVotes) => {
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [articleID])
+    .then((article) => {
+      article.rows[0].votes += incVotes;
+      return article.rows[0];
+    });
+};
