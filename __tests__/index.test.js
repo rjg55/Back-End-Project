@@ -39,4 +39,14 @@ describe.only("api/topics", () => {
         });
     });
   });
+  describe("Error Handling", () => {
+    test("status 404 - Not Found", () => {
+      return request(app)
+        .get("/api/notaroute")
+        .expect(404)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Not found!" });
+        });
+    });
+  });
 });

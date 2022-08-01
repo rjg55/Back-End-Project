@@ -7,5 +7,6 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.handleUnknownEndpoints = (req, res, next) => {
+  console.log("im an unknown endpoint controller");
   next(err);
 };
