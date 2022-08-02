@@ -167,3 +167,26 @@ describe("Comment Count", () => {
     });
   });
 });
+
+describe.only("api/articles", () => {
+  describe("GET", () => {
+    test("status 200: responds with an array of article objects sorted by date (descending) by default", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          expect(Array.isArray(response.body.articles)).toBe(true);
+        });
+    });
+    describe("Error Handling", () => {
+      test("status 404 - not found", () => {
+        return request(app)
+          .get("/api/artycles")
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({ msg: "Not found!" });
+          });
+      });
+    });
+  });
+});
