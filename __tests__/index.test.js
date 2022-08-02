@@ -20,22 +20,9 @@ describe("/api/topics", () => {
         .get("/api/topics")
         .expect(200)
         .then((response) => {
-          expect(response.body).toEqual({
-            topics: [
-              {
-                description: "The man, the Mitch, the legend",
-                slug: "mitch",
-              },
-              {
-                description: "Not dogs",
-                slug: "cats",
-              },
-              {
-                description: "what books are made of",
-                slug: "paper",
-              },
-            ],
-          });
+          expect(response.body.topics.length).toEqual(3);
+          expect(typeof response.body.topics[0].description).toBe("string");
+          expect(typeof response.body.topics[0].slug).toBe("string");
         });
     });
   });
@@ -81,7 +68,7 @@ describe("/api/articles/:article_id", () => {
   describe("Error Handling", () => {
     test("400 - Bad request. Input is not a number", () => {
       return request(app)
-        .get("/api/articles/battenburg")
+        .get("/api/articles/battenberg")
         .expect(400)
         .then((response) => {
           expect(response.body).toEqual({ status: 400, msg: "Bad request!" });
@@ -99,7 +86,7 @@ describe("/api/articles/:article_id", () => {
         });
     });
   });
-  describe.only("PATCH", () => {
+  describe("PATCH", () => {
     test("status 201: created", () => {
       return request(app)
         .patch("/api/articles/1")
@@ -118,6 +105,32 @@ describe("/api/articles/:article_id", () => {
             },
           });
         });
+    });
+    describe("Error Handling", () => {
+      test("status 400 - bad request. invalid newVotes input", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: "battenberg" })
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Bad request!",
+            });
+          });
+      });
+      test("status 204 - no content. no newVotes input", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({})
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Bad request - No user inputted content",
+            });
+          });
+      });
     });
   });
 });
