@@ -93,17 +93,8 @@ describe("/api/articles/:article_id", () => {
         .send({ inc_votes: 2 })
         .expect(201)
         .then((response) => {
-          expect(response.body).toEqual({
-            article: {
-              article_id: 1,
-              title: "Living in the shadow of a great man",
-              topic: "mitch",
-              author: "butter_bridge",
-              body: "I find this existence challenging",
-              created_at: "2020-07-09T20:11:00.000Z",
-              votes: 102,
-            },
-          });
+          expect(response.body.article.article_id).toEqual(1);
+          expect(response.body.article.votes).toEqual(102);
         });
     });
     describe("Error Handling", () => {
