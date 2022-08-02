@@ -126,7 +126,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe.only("/api/users", () => {
+describe("/api/users", () => {
   describe("GET", () => {
     test("status 200: responds with an array of objects containing properties: username, name, avatar_url", () => {
       return request(app)
