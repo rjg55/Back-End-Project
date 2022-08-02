@@ -168,7 +168,7 @@ describe("Comment Count", () => {
   });
 });
 
-describe.only("api/articles", () => {
+describe("api/articles", () => {
   describe("GET", () => {
     test("status 200: responds with an array of article objects sorted by date (descending) by default", () => {
       return request(app)
