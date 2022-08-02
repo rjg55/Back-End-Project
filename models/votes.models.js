@@ -2,7 +2,6 @@ const db = require("../db/connection");
 
 exports.updateVotesById = (articleID, incVotes) => {
   if (incVotes === undefined) {
-    console.log("im undefined");
     return Promise.reject({
       status: 400,
       msg: "Bad request - No user inputted content",

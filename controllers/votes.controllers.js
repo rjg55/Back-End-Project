@@ -5,7 +5,6 @@ exports.patchVotesByID = (req, res, next) => {
   const { inc_votes } = req.body;
   updateVotesById(article_id, inc_votes)
     .then((updatedArticle) => {
-      console.log(updatedArticle);
       res.status(201).send({ article: updatedArticle });
     })
     .catch(next);
