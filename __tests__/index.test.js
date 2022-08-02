@@ -125,3 +125,29 @@ describe("/api/articles/:article_id", () => {
     });
   });
 });
+
+describe("/api/users", () => {
+  describe("GET", () => {
+    test("status 200: responds with an array of objects containing properties: username, name, avatar_url", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.users.length).toBe(4);
+          expect(typeof response.body.users[0].username).toBe("string");
+          expect(typeof response.body.users[0].name).toBe("string");
+          expect(typeof response.body.users[0].avatar_url).toBe("string");
+        });
+    });
+    describe("Error handling", () => {
+      test("404 - not found", () => {
+        return request(app)
+          .get("/api/uzers")
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({ msg: "Not found!" });
+          });
+      });
+    });
+  });
+});
