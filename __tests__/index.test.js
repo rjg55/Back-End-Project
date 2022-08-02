@@ -53,15 +53,16 @@ describe("/api/articles/:article_id", () => {
         .get("/api/articles/1")
         .expect(200)
         .then((response) => {
-          expect(Object.keys(response.body.article)).toEqual([
-            "article_id",
-            "title",
-            "topic",
-            "author",
-            "body",
-            "created_at",
-            "votes",
-          ]);
+          expect(response.body.article.hasOwnProperty("article_id")).toBe(true);
+          expect(response.body.article.hasOwnProperty("title")).toBe(true);
+          expect(response.body.article.hasOwnProperty("topic")).toBe(true);
+          expect(response.body.article.hasOwnProperty("author")).toBe(true);
+          expect(response.body.article.hasOwnProperty("body")).toBe(true);
+          expect(response.body.article.hasOwnProperty("created_at")).toBe(true);
+          expect(response.body.article.hasOwnProperty("votes")).toBe(true);
+          expect(response.body.article.hasOwnProperty("comment_count")).toBe(
+            true
+          );
         });
     });
   });
@@ -148,6 +149,21 @@ describe("/api/users", () => {
             expect(response.body).toEqual({ msg: "Not found!" });
           });
       });
+    });
+  });
+});
+
+describe("Comment Count", () => {
+  describe("GET", () => {
+    test("status 200: article response includes a comment count property", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.article.hasOwnProperty("comment_count")).toBe(
+            true
+          );
+        });
     });
   });
 });
