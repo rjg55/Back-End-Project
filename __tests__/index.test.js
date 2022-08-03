@@ -176,6 +176,18 @@ describe("api/articles", () => {
         .expect(200)
         .then((response) => {
           expect(Array.isArray(response.body.articles)).toBe(true);
+          expect(
+            response.body.articles[0].created_at >
+              response.body.articles[1].created_at
+          ).toBe(true);
+          expect(
+            response.body.articles[1].created_at >
+              response.body.articles[2].created_at
+          ).toBe(true);
+          expect(
+            response.body.articles[2].created_at >
+              response.body.articles[3].created_at
+          ).toBe(true);
         });
     });
     describe("Error Handling", () => {
