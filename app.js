@@ -4,6 +4,7 @@ const { patchVotesByID } = require("./controllers/votes.controllers");
 const {
   getArticlesById,
   getArticles,
+  getCommentsByArticleId,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getUsers } = require("./controllers/users.controllers");
@@ -12,13 +13,15 @@ app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
+app.get("/api/users", getUsers);
+
+app.get("/api/articles", getArticles);
+
 app.get("/api/articles/:article_id", getArticlesById);
 
 app.patch("/api/articles/:article_id", patchVotesByID);
 
-app.get("/api/users", getUsers);
-
-app.get("/api/articles", getArticles);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 // This will handle all undefined endpoints
 
