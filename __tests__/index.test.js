@@ -193,3 +193,59 @@ describe("api/articles", () => {
     });
   });
 });
+
+describe("api/articles/:article_id/comments", () => {
+  describe("GET", () => {
+    test("status 200: responds with an array of comments for selected article", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          expect(Array.isArray(response.body.comments)).toBe(true);
+        });
+    });
+    test("status 200: comments object should contain properties: comment_id, votes, created_at, author, body", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments[0]).toHaveProperty(
+            "comment_id",
+            "votes",
+            "created_at",
+            "author",
+            "body"
+          );
+        });
+    });
+    test("status 200: responds with an empty array for a valid article with no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toEqual([]);
+        });
+    });
+    describe("Error Handling", () => {
+      test("status 404 - not found - article doesn't exist but is valid", () => {
+        return request(app)
+          .get("/api/articles/999/comments")
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Article not found",
+            });
+          });
+      });
+      test("status 400 - bad request - article_id is invalid", () => {
+        return request(app)
+          .get("/api/articles/battenberg/comments")
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({ status: 400, msg: "Bad request!" });
+          });
+      });
+    });
+  });
+});

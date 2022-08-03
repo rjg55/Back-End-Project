@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { checkExists } = require("../utils");
 
 exports.selectArticles = (order = "desc") => {
   const orderValues = ["asc", "desc"];
@@ -24,5 +25,16 @@ exports.selectArticleById = (articleID) => {
         return Promise.reject({ status: 404, msg: "Article not found!" });
       }
       return article.rows[0];
+    });
+};
+
+exports.selectCommentsByArticleId = (articleID) => {
+  return db
+    .query(`SELECT * FROM comments WHERE article_id = $1`, [articleID])
+    .then(async (comments) => {
+      if (!comments.rows.length) {
+        await checkExists("articles", "article_id", articleID);
+      }
+      return comments.rows;
     });
 };
