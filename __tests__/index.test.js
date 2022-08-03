@@ -111,7 +111,7 @@ describe("/api/articles/:article_id", () => {
             });
           });
       });
-      test("status 204 - no content. no newVotes input", () => {
+      test("status 400 - no content. no newVotes input", () => {
         return request(app)
           .patch("/api/articles/1")
           .send({})
@@ -246,6 +246,26 @@ describe("api/articles/:article_id/comments", () => {
             expect(response.body).toEqual({ status: 400, msg: "Bad request!" });
           });
       });
+    });
+  });
+  describe.only("POST", () => {
+    test("status 201 - responds with a post comment", () => {
+      return request(app)
+        .post("/api/articles/11/comments")
+        .send({
+          username: "rickroll",
+          body: "You know I'm something of a feline myself.",
+        })
+        .expect(201)
+        .then((response) => {
+          expect(response.body.comment).toHaveProperty(
+            "author",
+            "body",
+            "votes",
+            "article_id",
+            "created_at"
+          );
+        });
     });
   });
 });

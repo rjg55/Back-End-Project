@@ -38,3 +38,14 @@ exports.selectCommentsByArticleId = (articleID) => {
       return comments.rows;
     });
 };
+
+exports.addCommentByArticleId = (articleID, username, body) => {
+  return db
+    .query(
+      `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`,
+      [articleID, username, body]
+    )
+    .then((newComment) => {
+      return newComment.rows[0];
+    });
+};
