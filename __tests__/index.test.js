@@ -253,7 +253,7 @@ describe("api/articles/:article_id/comments", () => {
       return request(app)
         .post("/api/articles/11/comments")
         .send({
-          username: "rickroll",
+          username: "rogersop",
           body: "You know I'm something of a feline myself.",
         })
         .expect(201)
@@ -266,6 +266,20 @@ describe("api/articles/:article_id/comments", () => {
             "created_at"
           );
         });
+    });
+    describe("Error Handling", () => {
+      test("status 400 - bad request - no user inputted content", () => {
+        return request(app)
+          .post("/api/articles/11/comments")
+          .send({ username: "rogersop", body: undefined })
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "No comment input provided",
+            });
+          });
+      });
     });
   });
 });

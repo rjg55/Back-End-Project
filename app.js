@@ -34,11 +34,12 @@ app.use("*", (req, res) => {
 // Error Handling //
 
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err.status && err.msg) {
     res.status(err.status).send({ status: err.status, msg: err.msg });
   } else if (err.code === "22P02") {
     res.status(400).send({ status: 400, msg: "Bad request!" });
+  } else if (err.code === "23502") {
+    res.status(400).send({ status: 400, msg: "No comment input provided" });
   }
 });
 

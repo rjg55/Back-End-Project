@@ -32,12 +32,10 @@ exports.getCommentsByArticleId = (req, res, next) => {
 };
 
 exports.postCommentByArticleId = (req, res, next) => {
-  console.log(req.body);
   const { username, body } = req.body;
   const { article_id } = req.params;
   addCommentByArticleId(article_id, username, body)
     .then((newComment) => {
-      console.log(newComment);
       res.status(201).send({ comment: newComment });
     })
     .catch(next);
