@@ -9,6 +9,7 @@ const {
   topicData,
   userData,
 } = require("../db/data/test-data/index");
+const { response } = require("../app");
 
 beforeEach(() => seed({ articleData, commentData, topicData, userData }));
 afterAll(() => db.end());
@@ -170,7 +171,7 @@ describe("Comment Count", () => {
 
 describe("api/articles", () => {
   describe("GET", () => {
-    test("status 200: responds with an array of article objects sorted by date (descending) by default", () => {
+    test("status 200: responds with an array of article objects sorted by default column and ordered by default date (descending)", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -181,13 +182,117 @@ describe("api/articles", () => {
           });
         });
     });
+    test("status 200: responds with an array of article objects containing properties: title, topic, author, body, created_at, votes)", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles[0]).toHaveProperty(
+            "created_at",
+            "title",
+            "topic",
+            "author",
+            "body",
+            "votes"
+          );
+        });
+    });
+    test("status 200: responds with an array of articles sorted by chosen column (ordered by desc as default)", () => {
+      return request(app)
+        .get("/api/articles?sortby=title")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toBeSortedBy("title", {
+            descending: true,
+          });
+        });
+    });
+    test("status 200: responds with array of articles sorted by default column and ordered by chosen order", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toBeSortedBy("created_at");
+        });
+    });
+    test("status 200: responds with array of articles sorted by chosen column in chosen order", () => {
+      return request(app)
+        .get("/api/articles?sortby=title&order=asc")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toBeSortedBy("title");
+        });
+    });
+    test("status 200: responds with array of articles filtered by user-inputted topic", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then((response) => {
+          const notInclude = [
+            {
+              article_id: 7,
+              title: "Z",
+              topic: "mitch",
+              author: "icellusedkars",
+              body: "I was hungry.",
+              created_at: "2020-01-07T14:08:00.000Z",
+              votes: 0,
+              comment_count: "0",
+            },
+          ];
+          expect(response.body.articles).toEqual(
+            expect.not.arrayContaining(notInclude)
+          );
+        });
+    });
+    test("status 200: responds with empty array when topic exists but has no associated articles", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toEqual([]);
+        });
+    });
     describe("Error Handling", () => {
-      test("status 404 - not found", () => {
+      test("status 404 - endpoint not found", () => {
         return request(app)
           .get("/api/artycles")
           .expect(404)
           .then((response) => {
             expect(response.body).toEqual({ msg: "Not found!" });
+          });
+      });
+      test("status 400 - bad request - sortby column doesnt exist on db", () => {
+        return request(app)
+          .get("/api/articles?sortby=battenberg")
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Not a valid column",
+            });
+          });
+      });
+      test("status 400 - bad request - order by != ASC or DESC (invalid input)", () => {
+        return request(app)
+          .get("/api/articles?order=newest")
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Invalid order query - must be 'asc' or 'desc",
+            });
+          });
+      });
+      test("status 404 - not found - topic not in database", () => {
+        return request(app)
+          .get("/api/articles?topic=battenberg")
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Topic not found!",
+            });
           });
       });
     });
