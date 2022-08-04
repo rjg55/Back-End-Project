@@ -1,16 +1,51 @@
 const db = require("../db/connection");
 const { checkExists } = require("../utils");
 
-exports.selectArticles = (order = "desc") => {
+exports.selectArticles = (sortby = "created_at", order = "desc", topic) => {
   const orderValues = ["asc", "desc"];
-  if (orderValues.includes(order)) {
+  const sortbyValues = [
+    "created_at",
+    "title",
+    "topic",
+    "author",
+    "body",
+    "votes",
+  ];
+  const topicValues = [];
+
+  const queryStr = `SELECT articles.article_id, title, topic, articles.author, articles.body, articles.created_at, articles.votes, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
+  const whereStr = `WHERE topic = $1`;
+  const orderStr = `GROUP BY articles.article_id ORDER BY ${sortby} ${order};`;
+
+  if (
+    orderValues.includes(order) &&
+    sortbyValues.includes(sortby) &&
+    topic === undefined
+  ) {
+    return db.query(queryStr + orderStr).then((articles) => {
+      return articles.rows;
+    });
+  } else if (
+    topic !== undefined &&
+    orderValues.includes(order) &&
+    sortbyValues.includes(sortby)
+  ) {
+    topicValues.push(topic);
     return db
-      .query(
-        `SELECT articles.article_id, title, topic, articles.author, articles.body, articles.created_at, articles.votes, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY created_at ${order};`
-      )
-      .then((articles) => {
+      .query(queryStr + whereStr + orderStr, topicValues)
+      .then(async (articles) => {
+        if (!articles.rows.length) {
+          await checkExists("topics", "slug", topic);
+        }
         return articles.rows;
       });
+  } else if (!sortbyValues.includes(sortby)) {
+    return Promise.reject({ status: 404, msg: "Column not found!" });
+  } else if (!orderValues.includes(order)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid order query - must be 'asc' or 'desc",
+    });
   }
 };
 
