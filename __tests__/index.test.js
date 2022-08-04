@@ -111,7 +111,7 @@ describe("/api/articles/:article_id", () => {
             });
           });
       });
-      test("status 204 - no content. no newVotes input", () => {
+      test("status 400 - no content. no newVotes input", () => {
         return request(app)
           .patch("/api/articles/1")
           .send({})
@@ -244,6 +244,76 @@ describe("api/articles/:article_id/comments", () => {
           .expect(400)
           .then((response) => {
             expect(response.body).toEqual({ status: 400, msg: "Bad request!" });
+          });
+      });
+    });
+  });
+  describe("POST", () => {
+    test("status 201 - responds with a post comment", () => {
+      return request(app)
+        .post("/api/articles/11/comments")
+        .send({
+          username: "rogersop",
+          body: "You know I'm something of a feline myself.",
+        })
+        .expect(201)
+        .then((response) => {
+          expect(response.body.comment).toHaveProperty(
+            "author",
+            "body",
+            "votes",
+            "article_id",
+            "created_at"
+          );
+        });
+    });
+    describe("Error Handling", () => {
+      test("status 400 - bad request - no user inputted content", () => {
+        return request(app)
+          .post("/api/articles/11/comments")
+          .send({ username: "rogersop", body: undefined })
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "No comment input provided",
+            });
+          });
+      });
+      test("status 404 - article_id not found", () => {
+        return request(app)
+          .post("/api/articles/999/comments")
+          .send({ username: "rogersop", body: "Im a 404 comment" })
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Article not found",
+            });
+          });
+      });
+      test("status 400 - invalid article_id", () => {
+        return request(app)
+          .post("/api/articles/battenberg/comments")
+          .send({ username: "rogersop", body: "Im a 400 comment" })
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Bad request!",
+            });
+          });
+      });
+      test("status 404 - username does not exist", () => {
+        return request(app)
+          .post("/api/articles/11/comments")
+          .send({ username: "rickroll", body: "Im a 404 comment" })
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Username not found",
+            });
           });
       });
     });

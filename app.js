@@ -5,9 +5,11 @@ const {
   getArticlesById,
   getArticles,
   getCommentsByArticleId,
+  postCommentByArticleId,
 } = require("./controllers/articles.controllers");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getUsers } = require("./controllers/users.controllers");
+const { errorHandling } = require("./errors");
 
 app.use(express.json());
 
@@ -23,6 +25,8 @@ app.patch("/api/articles/:article_id", patchVotesByID);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
 // This will handle all undefined endpoints
 
 app.use("*", (req, res) => {
@@ -31,12 +35,6 @@ app.use("*", (req, res) => {
 
 // Error Handling //
 
-app.use((err, req, res, next) => {
-  if (err.status && err.msg) {
-    res.status(err.status).send({ status: err.status, msg: err.msg });
-  } else if (err.code === "22P02") {
-    res.status(400).send({ status: 400, msg: "Bad request!" });
-  }
-});
+app.use(errorHandling);
 
 module.exports = app;
