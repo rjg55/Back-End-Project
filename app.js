@@ -10,6 +10,7 @@ const {
 const { getTopics } = require("./controllers/topics.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const { errorHandling } = require("./errors");
+const { deleteCommentByID } = require("./controllers/comments.controllers");
 
 app.use(express.json());
 
@@ -26,6 +27,8 @@ app.patch("/api/articles/:article_id", patchVotesByID);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.delete("/api/comments/:comment_id", deleteCommentByID);
 
 // This will handle all undefined endpoints
 
