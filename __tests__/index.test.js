@@ -280,6 +280,42 @@ describe("api/articles/:article_id/comments", () => {
             });
           });
       });
+      test("status 404 - article_id not found", () => {
+        return request(app)
+          .post("/api/articles/999/comments")
+          .send({ username: "rogersop", body: "Im a 404 comment" })
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Article not found",
+            });
+          });
+      });
+      test("status 400 - invalid article_id", () => {
+        return request(app)
+          .post("/api/articles/battenberg/comments")
+          .send({ username: "rogersop", body: "Im a 400 comment" })
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Bad request!",
+            });
+          });
+      });
+      test("status 404 - username does not exist", () => {
+        return request(app)
+          .post("/api/articles/11/comments")
+          .send({ username: "rickroll", body: "Im a 404 comment" })
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Username not found",
+            });
+          });
+      });
     });
   });
 });
