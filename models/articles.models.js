@@ -40,7 +40,7 @@ exports.selectArticles = (sortby = "created_at", order = "desc", topic) => {
         return articles.rows;
       });
   } else if (!sortbyValues.includes(sortby)) {
-    return Promise.reject({ status: 404, msg: "Column not found!" });
+    return Promise.reject({ status: 400, msg: "Not a valid column" });
   } else if (!orderValues.includes(order)) {
     return Promise.reject({
       status: 400,
