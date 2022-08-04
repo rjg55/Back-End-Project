@@ -42,48 +42,56 @@
     "description": "serves an article object corresponding to article_id",
     "queries": [],
     "exampleResponse": {
-      "title": "Does Mitch predate civilisation?",
-      "topic": "mitch",
-      "author": "icellusedkars",
-      "body": "Archaeologists have uncovered a gigantic statue from the dawn of humanity, and it has an uncanny resemblance to Mitch. Surely I am not the only person who can see this?!",
-      "created_at": 1587089280000,
-      "votes": 0
+      "article": {
+        "title": "Does Mitch predate civilisation?",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "Archaeologists have uncovered a gigantic statue from the dawn of humanity, and it has an uncanny resemblance to Mitch. Surely I am not the only person who can see this?!",
+        "created_at": 1587089280000,
+        "votes": 0
+      }
     }
   },
   "PATCH /api/articles/:article_id": {
     "description": "serves an updated article object corresponding to article_id that has an altered vote property",
     "queries": [],
     "exampleResponse": {
-      "title": "Does Mitch predate civilisation?",
-      "topic": "mitch",
-      "author": "icellusedkars",
-      "body": "Archaeologists have uncovered a gigantic statue from the dawn of humanity, and it has an uncanny resemblance to Mitch. Surely I am not the only person who can see this?!",
-      "created_at": 1587089280000,
-      "votes": 1
+      "article": {
+        "title": "Does Mitch predate civilisation?",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "Archaeologists have uncovered a gigantic statue from the dawn of humanity, and it has an uncanny resemblance to Mitch. Surely I am not the only person who can see this?!",
+        "created_at": 1587089280000,
+        "votes": 1
+      }
     }
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an array of comments objects corresponding to article_id",
     "queries": [],
-    "exampleResponse": [
-      {
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "Fruit pastilles",
+          "votes": 0,
+          "author": "icellusedkars",
+          "article_id": 1,
+          "created_at": 1592220300000
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "serves a new comment object corresponding to article_id",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
         "body": "Fruit pastilles",
         "votes": 0,
         "author": "icellusedkars",
         "article_id": 1,
         "created_at": 1592220300000
       }
-    ]
-  },
-  "POST /api/articles/:article_id/comments": {
-    "description": "serves a new comment object corresponding to article_id",
-    "queries": [],
-    "exampleResponse": {
-      "body": "Fruit pastilles",
-      "votes": 0,
-      "author": "icellusedkars",
-      "article_id": 1,
-      "created_at": 1592220300000
     }
   },
   "DELETE /api/comments/:comment_id": {
