@@ -424,3 +424,35 @@ describe("api/articles/:article_id/comments", () => {
     });
   });
 });
+
+describe("/api/comments/:comments_id", () => {
+  describe("DELETE", () => {
+    test("status 204 - no content: deletes specific comment and responds with no content", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+    describe("Error Handling", () => {
+      test("status 404 - not found - comment_id does not exist", () => {
+        return request(app)
+          .delete("/api/comments/999")
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 404,
+              msg: "Comment not found!",
+            });
+          });
+      });
+      test("status 400 - bad request - comment_id is invalid", () => {
+        return request(app)
+          .delete("/api/comments/battenberg")
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toEqual({
+              status: 400,
+              msg: "Bad request!",
+            });
+          });
+      });
+    });
+  });
+});
