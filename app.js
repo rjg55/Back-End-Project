@@ -11,8 +11,11 @@ const { getTopics } = require("./controllers/topics.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const { errorHandling } = require("./errors");
 const { deleteCommentByID } = require("./controllers/comments.controllers");
+const { getEndpoints } = require("./controllers/api.controllers");
 
 app.use(express.json());
+
+app.get("/api", getEndpoints);
 
 app.get("/api/topics", getTopics);
 
