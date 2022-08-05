@@ -14,6 +14,47 @@ const { response } = require("../app");
 beforeEach(() => seed({ articleData, commentData, topicData, userData }));
 afterAll(() => db.end());
 
+describe("/api", () => {
+  describe("GET", () => {
+    test("status 200: responds with a endpoints.json containing an object with all endpoints on this api", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+          expect(typeof response.body.endpoints).toEqual("object");
+        });
+    });
+    test("status 200: endpoints is an object with the endpoints as keys", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.endpoints).toHaveProperty(
+            "GET /api",
+            "GET /api/topics",
+            "GET /api/users",
+            "GET /api/articles",
+            "GET /api/articles/:article_id",
+            "PATCH /api/articles/:article_id",
+            "GET /api/articles/:article_id/comments",
+            "POST /api/articles/:article_id/comments",
+            "DELETE /api/comments/:comment_id"
+          );
+        });
+    });
+    describe("error handling", () => {
+      test("status 404: responds with a not found msg when incorrectly spelt", () => {
+        return request(app)
+          .get("/appi")
+          .expect(404)
+          .then((response) => {
+            expect(response.body).toEqual({ msg: "Not found!" });
+          });
+      });
+    });
+  });
+});
+
 describe("/api/topics", () => {
   describe("GET", () => {
     test("status 200: responds with an array of topic objects, containing slug and description properties", () => {
