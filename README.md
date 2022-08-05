@@ -21,7 +21,7 @@ The principles of MVC (Model-View-Controller) have been applied. Express JS is u
 3. Click the green code icon and copy the https web URL
 4. In your terminal of choice, navigate to where you would like to store your copy of the repository
 5. Input command: **git clone INSERT-COPIED-REPO-URL**
-6. Open the repo in your IDE of choice (If using VSCode - Input command: **code .**
+6. Open the repo in your IDE of choice (If using VSCode - Input command: **code .**)
 
 ## 2. INSTALL DEPENDENCIES
 
