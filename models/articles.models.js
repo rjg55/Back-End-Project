@@ -65,7 +65,10 @@ exports.selectArticleById = (articleID) => {
 
 exports.selectCommentsByArticleId = (articleID) => {
   return db
-    .query(`SELECT * FROM comments WHERE article_id = $1`, [articleID])
+    .query(
+      `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
+      [articleID]
+    )
     .then(async (comments) => {
       if (!comments.rows.length) {
         await checkExists("articles", "article_id", articleID);
