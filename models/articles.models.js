@@ -10,6 +10,7 @@ exports.selectArticles = (sortby = "created_at", order = "desc", topic) => {
     "author",
     "body",
     "votes",
+    "comment_count",
   ];
   const topicValues = [];
 
