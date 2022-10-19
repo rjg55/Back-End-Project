@@ -1,4 +1,4 @@
-# FOR FUTURE DEVELOPERS
+# Back-end API Project
 
 Please follow these steps in order to setup this repo
 
