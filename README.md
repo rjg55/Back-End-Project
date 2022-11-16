@@ -2,9 +2,9 @@
 
 Please follow these steps in order to setup this repo
 
-# HEROKU
+# Hosted Version
 
-[Here](https://wtan.herokuapp.com/) is a link for the hosted version of this API.
+[Here](https://wtan.cyclic.com/api) is a link for the hosted version of this API.
 
 # SUMMARY
 
